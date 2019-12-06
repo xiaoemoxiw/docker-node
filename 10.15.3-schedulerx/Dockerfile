@@ -12,6 +12,7 @@ RUN apt-get update && \
         vim \
         zip \
         unzip \
+        openjdk-8-jdk \
     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
     && yarn config set registry https://registry.npm.taobao.org \
@@ -21,8 +22,21 @@ RUN apt-get update && \
     && cnpm install -g webpack \
     && cnpm install -g less
 
-COPY ./schedulerx2Agent-1.0.0-SNAPSHOT.tar.gz /opt/schedulerx2Agent-1.0.0-SNAPSHOT.tar.gz
-RUN tar zxf /opt/schedulerx2Agent-1.0.0-SNAPSHOT.tar.gz
+ENV ENV_GROUP_ID="" \
+    ENV_ENDPOINT="" \
+    ENV_NAMESPACE="" \
+    ENV_ALIYUN_ACCESS_KEY="" \
+    ENV_ALIYUN_SECRET_KEY=""
+
+COPY ./schedulerx2Agent /opt/schedulerx2Agent
+COPY ./schedulerx_conf.sh /opt/schedulerx_conf.sh
+RUN chmod +x /opt/schedulerx_conf.sh
+CMD ["/opt/schedulerx_conf.sh"]
+
+
+
+
+
 
 
 
